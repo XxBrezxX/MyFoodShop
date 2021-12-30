@@ -1,0 +1,9 @@
+com\ipn\mx\modelo\dto\ClientDTO.class
+com\ipn\mx\utilerias\EnviarMail.class
+com\ipn\mx\utilerias\HibernateUtil.class
+com\ipn\mx\controlador\CategoriaController.class
+com\ipn\mx\modelo\dao\CategoriaDAO.class
+com\ipn\mx\modelo\dto\CategoriaDTO.class
+com\ipn\mx\modelo\entidades\Client.class
+com\ipn\mx\modelo\dao\ClientDAO.class
+com\ipn\mx\modelo\entidades\Categoria.class
