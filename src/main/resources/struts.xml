@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+    "http://struts.apache.org/dtds/struts-2.5.dtd"
+>
+<struts>
+    <package name="default" namespace="/" extends="struts-default">
+        
+        <!-- Conjunto de acciones para categoría -->
+        <action name="verifyLogin" class="com.ipn.mx.action.LoginAction">
+            <result name="success">
+                /principal.jsp
+            </result>
+            <result name="error">
+                /index.jsp
+            </result>
+        </action>
+        <action name="Inicio" method="Inicio" class="com.ipn.mx.action.SiteAction">
+            <result name="success">
+                /principal.jsp
+            </result>
+        </action>
+        <action name="Productos" method="Productos" class="com.ipn.mx.action.SiteAction">
+            <result name="success">
+                /productos/listarProductos.jsp
+            </result>
+        </action>
+        <action name="Reviews" method="Reviews" class="com.ipn.mx.action.SiteAction">
+            <result name="success">
+                /reviews.jsp
+            </result>
+        </action>
+        <action name="Follow" method="Follow" class="com.ipn.mx.action.SiteAction">
+            <result name="success">
+                /ordenes/following.jsp
+            </result>
+        </action>
+        <action name="Stats" method="Stats" class="com.ipn.mx.action.SiteAction">
+            <result name="success">
+                /graficas/stats.jsp
+            </result>
+        </action>
+        <action name="Account" method="Account" class="com.ipn.mx.action.SiteAction">
+            <result name="success">
+                /user/account.jsp
+            </result>
+        </action>
+        <action name="AgregarProducto" method="AgregarProducto" class="com.ipn.mx.action.SiteAction">
+            <result name="success" type="redirect">
+                Productos
+            </result>
+        </action>
+        
+    </package> 
+</struts>

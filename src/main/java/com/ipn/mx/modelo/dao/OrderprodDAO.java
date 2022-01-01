@@ -5,8 +5,10 @@
  */
 package com.ipn.mx.modelo.dao;
 
-import com.ipn.mx.modelo.dto.ClientDTO;
-import com.ipn.mx.modelo.entidades.Client;
+import com.ipn.mx.modelo.dto.OrderprodDTO;
+import com.ipn.mx.modelo.dto.OrdertableDTO;
+import com.ipn.mx.modelo.dto.ProductDTO;
+import com.ipn.mx.modelo.entidades.Order_prod;
 import com.ipn.mx.utilerias.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +21,10 @@ import org.hibernate.query.Query;
  *
  * @author Bryan Hdz
  */
-public class ClientDAO {
-
-    public void create(ClientDTO dto) {
+public class OrderprodDAO {
+    
+    
+    public void create(OrderprodDTO dto){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         try {
@@ -34,8 +37,8 @@ public class ClientDAO {
             }
         }
     }
-
-    public void update(ClientDTO dto) {
+    
+    public void update(OrderprodDTO dto){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         try {
@@ -48,13 +51,13 @@ public class ClientDAO {
             }
         }
     }
-
-    public void delete(ClientDTO dto) {
+    
+    public void delete(OrderprodDTO dto){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         try {
             t.begin();
-            s.delete(s.get(dto.getEntidad().getClass(), dto.getEntidad().getIdclient()));
+            s.delete(s.get(dto.getEntidad().getClass(), dto.getEntidad().getIdorderprod()));
             t.commit();
         } catch (HibernateException he) {
             if (t != null && t.isActive()) {
@@ -62,16 +65,16 @@ public class ClientDAO {
             }
         }
     }
-
-    public List readAll() {
+    
+    public List readAll(){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         List lista = new ArrayList();
         try {
             t.begin();
-            Query q = s.createQuery("from Client");
-            for (Client c : (List<Client>) q.list()) {
-                ClientDTO dto = new ClientDTO();
+            Query q = s.createQuery("from Order_prod");
+            for(Order_prod c: (List<Order_prod>)q.list()){
+                OrderprodDTO dto = new OrderprodDTO();
                 dto.setEntidad(c);
                 lista.add(dto);
             }
@@ -83,13 +86,13 @@ public class ClientDAO {
         }
         return lista;
     }
-
-    public ClientDTO read(ClientDTO dto) {
+    
+    public OrderprodDTO read(OrderprodDTO dto){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         try {
             t.begin();
-            dto.setEntidad(s.get(dto.getEntidad().getClass(), dto.getEntidad().getIdclient()));
+            dto.setEntidad(s.get(dto.getEntidad().getClass(), dto.getEntidad().getIdorderprod()));
             t.commit();
         } catch (HibernateException he) {
             if (t != null && t.isActive()) {
@@ -98,34 +101,27 @@ public class ClientDAO {
         }
         return dto;
     }
-
-    public ClientDTO verifyEmailPassword(ClientDTO dto) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction t = s.getTransaction();
-        List<ClientDTO> lista = new ArrayList<>();
-        try {
-            t.begin();
-            Query q = s.createNativeQuery("SELECT * FROM Client WHERE correo like :vcorreo and digesto like :vdig", Client.class)
-                    .setParameter("vcorreo", dto.getEntidad().getCorreo())
-                    .setParameter("vdig", dto.getEntidad().getDigesto());
-            for (Client c : (List<Client>) q.list()) {
-                ClientDTO dto2 = new ClientDTO();
-                dto2.setEntidad(c);
-                lista.add(dto2);
-            }
-            t.commit();
-            return lista.get(0);
-        } catch (Exception e) {
-        }
-        return null;
-    }
-
+    
     public static void main(String[] args) {
-        ClientDTO dto = new ClientDTO();
-        ClientDAO dao = new ClientDAO();
-        dto.getEntidad().setCorreo("myCorreo@gmail.com");
-        dto.getEntidad().setDigesto("11111");
-
-        System.out.println(dao.verifyEmailPassword(dto));
+        OrderprodDAO dao = new OrderprodDAO();
+        OrderprodDTO dto = new OrderprodDTO();
+        
+        OrdertableDAO daoOrder = new OrdertableDAO();
+        OrdertableDTO dtoOrder = new OrdertableDTO();
+        dtoOrder.getEntidad().setIdorder(8);
+        dtoOrder.setEntidad(daoOrder.read(dtoOrder).getEntidad());
+        
+        ProductDAO daoProd = new ProductDAO();
+        ProductDTO dtoProd = new ProductDTO();
+        
+        dtoProd.getEntidad().setIdproducto(3);
+        dtoProd.setEntidad(daoProd.read(dtoProd).getEntidad());
+        
+        dto.getEntidad().setCantidad(5);
+        dto.getEntidad().setFk_order(dtoOrder.getEntidad());
+        dto.getEntidad().setFk_product(dtoProd.getEntidad());
+        
+        List res = dao.readAll();
+        System.out.println(res);
     }
 }

@@ -7,6 +7,7 @@ package com.ipn.mx.modelo.entidades;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -66,5 +68,18 @@ public class Product implements Serializable {
 //                }
 //              }
 //    )
-//    Set<Ordertable> orders = new HashSet<>();
+////    Set<Ordertable> orders = new HashSet<>();
+//    
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "order_prod",
+//            joinColumns = @JoinColumn(name = "fk_product"),
+//            inverseJoinColumns = @JoinColumn(name = "fk_order"),
+//            uniqueConstraints = {
+//                @UniqueConstraint(
+//                        columnNames = {"fk_product", "fk_order"}
+//                )
+//            }
+//    )
+//    private List<Ordertable> order_prod;
 }

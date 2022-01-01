@@ -71,11 +71,13 @@ public class ProductDAO {
         try {
             t.begin();
             Query q = s.createQuery("from Product");
-            for(Product c: (List<Product>)q.list()){
-                ProductDTO dto = new ProductDTO();
-                dto.setEntidad(c);
-                lista.add(dto);
-            }
+//            for(Product c: (List<Product>)q.list()){
+//                ProductDTO dto = new ProductDTO();
+//                dto.setEntidad(c);
+//                lista.add(dto);
+//            }
+            lista = q.list();
+            t.commit();
         } catch (HibernateException e) {
             if (t != null && t.isActive()) {
                 t.rollback();

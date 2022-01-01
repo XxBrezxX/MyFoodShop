@@ -5,8 +5,10 @@
  */
 package com.ipn.mx.modelo.dao;
 
-import com.ipn.mx.modelo.dto.ClientDTO;
-import com.ipn.mx.modelo.entidades.Client;
+import com.ipn.mx.modelo.dto.AddressDTO;
+import com.ipn.mx.modelo.dto.RestaurantDTO;
+import com.ipn.mx.modelo.dto.RestaurantaddressDTO;
+import com.ipn.mx.modelo.entidades.Restaurant_address;
 import com.ipn.mx.utilerias.HibernateUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +21,8 @@ import org.hibernate.query.Query;
  *
  * @author Bryan Hdz
  */
-public class ClientDAO {
-
-    public void create(ClientDTO dto) {
+public class RestaurantaddressDAO {
+    public void create(RestaurantaddressDTO dto){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         try {
@@ -34,8 +35,8 @@ public class ClientDAO {
             }
         }
     }
-
-    public void update(ClientDTO dto) {
+    
+    public void update(RestaurantaddressDTO dto){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         try {
@@ -48,13 +49,13 @@ public class ClientDAO {
             }
         }
     }
-
-    public void delete(ClientDTO dto) {
+    
+    public void delete(RestaurantaddressDTO dto){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         try {
             t.begin();
-            s.delete(s.get(dto.getEntidad().getClass(), dto.getEntidad().getIdclient()));
+            s.delete(s.get(dto.getEntidad().getClass(), dto.getEntidad().getIdrestaurantaddress()));
             t.commit();
         } catch (HibernateException he) {
             if (t != null && t.isActive()) {
@@ -62,16 +63,16 @@ public class ClientDAO {
             }
         }
     }
-
-    public List readAll() {
+    
+    public List readAll(){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         List lista = new ArrayList();
         try {
             t.begin();
-            Query q = s.createQuery("from Client");
-            for (Client c : (List<Client>) q.list()) {
-                ClientDTO dto = new ClientDTO();
+            Query q = s.createQuery("from Restaurant_address");
+            for(Restaurant_address c: (List<Restaurant_address>)q.list()){
+                RestaurantaddressDTO dto = new RestaurantaddressDTO();
                 dto.setEntidad(c);
                 lista.add(dto);
             }
@@ -83,13 +84,13 @@ public class ClientDAO {
         }
         return lista;
     }
-
-    public ClientDTO read(ClientDTO dto) {
+    
+    public RestaurantaddressDTO read(RestaurantaddressDTO dto){
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction t = s.getTransaction();
         try {
             t.begin();
-            dto.setEntidad(s.get(dto.getEntidad().getClass(), dto.getEntidad().getIdclient()));
+            dto.setEntidad(s.get(dto.getEntidad().getClass(), dto.getEntidad().getIdrestaurantaddress()));
             t.commit();
         } catch (HibernateException he) {
             if (t != null && t.isActive()) {
@@ -98,34 +99,24 @@ public class ClientDAO {
         }
         return dto;
     }
-
-    public ClientDTO verifyEmailPassword(ClientDTO dto) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction t = s.getTransaction();
-        List<ClientDTO> lista = new ArrayList<>();
-        try {
-            t.begin();
-            Query q = s.createNativeQuery("SELECT * FROM Client WHERE correo like :vcorreo and digesto like :vdig", Client.class)
-                    .setParameter("vcorreo", dto.getEntidad().getCorreo())
-                    .setParameter("vdig", dto.getEntidad().getDigesto());
-            for (Client c : (List<Client>) q.list()) {
-                ClientDTO dto2 = new ClientDTO();
-                dto2.setEntidad(c);
-                lista.add(dto2);
-            }
-            t.commit();
-            return lista.get(0);
-        } catch (Exception e) {
-        }
-        return null;
-    }
-
+    
     public static void main(String[] args) {
-        ClientDTO dto = new ClientDTO();
-        ClientDAO dao = new ClientDAO();
-        dto.getEntidad().setCorreo("myCorreo@gmail.com");
-        dto.getEntidad().setDigesto("11111");
-
-        System.out.println(dao.verifyEmailPassword(dto));
+        RestaurantaddressDAO dao = new RestaurantaddressDAO();
+        RestaurantaddressDTO dto = new RestaurantaddressDTO();
+        
+        RestaurantDAO daoRes = new RestaurantDAO();
+        RestaurantDTO dtoRes = new RestaurantDTO();
+        
+        AddressDAO daoAdd = new AddressDAO();
+        AddressDTO dtoAdd = new AddressDTO();
+        
+        dtoAdd.getEntidad().setIdaddress(1);
+        dtoRes.getEntidad().setIdrestaurant(2);
+        
+        dto.getEntidad().setFk_address(daoAdd.read(dtoAdd).getEntidad());
+        dto.getEntidad().setFk_restaurant(daoRes.read(dtoRes).getEntidad());
+        
+        dao.create(dto);
+        System.out.println(dao.readAll());
     }
 }

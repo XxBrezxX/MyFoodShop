@@ -44,6 +44,9 @@
         <property name = "hibernate.dbcp.maxWaitMillis">
             -1
         </property>
+        <property name = "hibernate.enable_lazy_load_no_trans">
+            true
+        </property>
         
         <!--Aqui inicia la definicion de clases de tipo entidad-->
         <mapping class="com.ipn.mx.modelo.entidades.Client"/>
@@ -54,6 +57,10 @@
         <mapping class="com.ipn.mx.modelo.entidades.Product"/>
         <mapping class="com.ipn.mx.modelo.entidades.Ordertable"/>
         <mapping class="com.ipn.mx.modelo.entidades.Sell"/>
+        
+        <mapping class="com.ipn.mx.modelo.entidades.Order_prod"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Client_address"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Restaurant_address"/>
         
     </session-factory>
 </hibernate-configuration>
