@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -51,10 +52,19 @@ public class SiteAction extends ActionSupport {
     private Order_prod order_prod;
     private List<OrderprodDTO> carrito;
     private HashMap reportParams = new HashMap();
+    private List<Map<String, String>> filas = new ArrayList<>();
 
     private final ProductDAO dao = new ProductDAO();
     private final OrderprodDAO opda = new OrderprodDAO();
 
+    public List getFilas() {
+        return filas;
+    }
+
+    public void setFilas(List filas) {
+        this.filas = filas;
+    }
+    
     public List<Product> getProductos() {
         return productos;
     }
@@ -247,13 +257,9 @@ public class SiteAction extends ActionSupport {
     public String viewShortReport() {
         HttpSession session = ServletActionContext.getRequest().getSession(false);
         System.out.println(session.getAttribute("dtoU"));
-        ClientDTO aux = new ClientDTO();
-        ClientDAO aux1 = new ClientDAO();
         int id = (int) session.getAttribute("dtoU");
-        aux.getEntidad().setIdclient(id);
-        this.dtoClient = aux1.read(aux);
-        System.out.println("com.ipn.mx.action.SiteAction.viewShortReport()" + this.dtoClient.getEntidad().getIdclient());
-        this.reportParams.put("vid", this.dtoClient.getEntidad().getIdclient());
+        
+        this.reportParams.put("vid", id);
         return SUCCESS;
     }
 

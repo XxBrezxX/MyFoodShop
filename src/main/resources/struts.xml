@@ -7,12 +7,12 @@
     <package name="default" namespace="/" extends="struts-default">
         
         <result-types>
-            <result-type name="jasper" class="org.apache.struts2.views.jasperreports.JasperReportsResult" default="false"/>
+            <result-type name="jasper" class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
         </result-types>
         <action name="viewShortReport" class="com.ipn.mx.action.SiteAction" method="viewShortReport">
             <result name="success" type="jasper">
-                <param name="location">reports/Food.jasper</param>
-                <param name="dataSource">events</param>
+                <param name="location">/reports/Food.jasper</param>
+                <param name="dataSource">reportParams</param>
                 <param name="format">PDF</param>
                 <param name="reportParameters">reportParams</param>
             </result>
