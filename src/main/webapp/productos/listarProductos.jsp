@@ -35,7 +35,7 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                                 <li><a class="dropdown-item" href="Follow">¡Sigue tu orden!</a></li>
-                                <li><a class="dropdown-item" href="Stats">Estadísticas</a></li>
+                                <li><a class="dropdown-item" href="viewShortReport">Estadísticas</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="Account">Cuenta</a></li>
                             </ul>

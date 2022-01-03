@@ -75,6 +75,7 @@ public class DeliveryDAO {
                 dto.setEntidad(c);
                 lista.add(dto);
             }
+            t.commit();
         } catch (HibernateException e) {
             if (t != null && t.isActive()) {
                 t.rollback();

@@ -8,6 +8,7 @@ package com.ipn.mx.modelo.dao;
 import com.ipn.mx.modelo.dto.AddressDTO;
 import com.ipn.mx.modelo.dto.ClientDTO;
 import com.ipn.mx.modelo.dto.ClientaddressDTO;
+import com.ipn.mx.modelo.dto.OrdertableDTO;
 import com.ipn.mx.modelo.entidades.Client;
 import com.ipn.mx.modelo.entidades.Client_address;
 import com.ipn.mx.utilerias.HibernateUtil;
@@ -126,20 +127,22 @@ public class ClientaddressDAO {
         ClientaddressDAO dao = new ClientaddressDAO();
         ClientaddressDTO dto = new ClientaddressDTO();
         
-        AddressDAO daoAdd = new AddressDAO();
-        AddressDTO dtoAdd = new AddressDTO();
-        dtoAdd.getEntidad().setIdaddress(2);
+//        AddressDAO daoAdd = new AddressDAO();
+//        AddressDTO dtoAdd = new AddressDTO();
+//        dtoAdd.getEntidad().setIdaddress(2);
         
         ClientDAO daoCli = new ClientDAO();
         ClientDTO dtoCli = new ClientDTO();
         dtoCli.getEntidad().setIdclient(3);
+        dtoCli = daoCli.read(dtoCli);
         
-        dto.getEntidad().setFk_address(daoAdd.read(dtoAdd).getEntidad());
-        dto.getEntidad().setFk_client(daoCli.read(dtoCli).getEntidad());
-        dao.create(dto);
         
-        System.out.println(dao.readAll());
+        OrdertableDAO otda = new OrdertableDAO();
+        OrdertableDTO otdt = new OrdertableDTO();
+
+        otdt = otda.giveAddresses(dtoCli);
+        
+        
     }
-    
 }
 

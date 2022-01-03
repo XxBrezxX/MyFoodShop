@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : following
     Created on : 30 dic. 2021, 21:45:54
     Author     : Bryan Hdz
@@ -35,7 +35,7 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                                 <li><a class="dropdown-item" href="Follow">¡Sigue tu orden!</a></li>
-                                <li><a class="dropdown-item" href="Stats">Estadísticas</a></li>
+                                <li><a class="dropdown-item" href="viewShortReport">Estadísticas</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="Account">Cuenta</a></li>
                             </ul>
@@ -121,7 +121,7 @@
                 </div>
             </div>
             <div class="card-footer text-muted justify-content-end d-flex">
-                <button type="button" class="btn btn-outline-light">Finalizar Pedido</button>
+                <a type="button" class="btn btn-outline-light" href="RealizarPedido">Finalizar Pedido</a>
             </div>
         </div>
     </body>

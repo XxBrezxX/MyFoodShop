@@ -6,6 +6,18 @@
 <struts>
     <package name="default" namespace="/" extends="struts-default">
         
+        <result-types>
+            <result-type name="jasper" class="org.apache.struts2.views.jasperreports.JasperReportsResult" default="false"/>
+        </result-types>
+        <action name="viewShortReport" class="com.ipn.mx.action.SiteAction" method="viewShortReport">
+            <result name="success" type="jasper">
+                <param name="location">reports/Food.jasper</param>
+                <param name="dataSource">events</param>
+                <param name="format">PDF</param>
+                <param name="reportParameters">reportParams</param>
+            </result>
+        </action>
+        
         <action name="verifyLogin" class="com.ipn.mx.action.LoginAction">
             <result name="success" type="redirectAction">
                 <param name="actionName">Start</param>
@@ -58,6 +70,11 @@
             </result>
         </action>
         <action name="eliminarProducto" method="EliminarProducto" class="com.ipn.mx.action.SiteAction">
+            <result name="success" type="redirect">
+                Follow
+            </result>
+        </action>
+        <action name="RealizarPedido" method="RealizarPedido" class="com.ipn.mx.action.SiteAction">
             <result name="success" type="redirect">
                 Follow
             </result>

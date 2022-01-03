@@ -9,17 +9,26 @@ import com.ipn.mx.modelo.dao.ClientDAO;
 import com.ipn.mx.modelo.dto.ClientDTO;
 import com.ipn.mx.utilerias.Singleton;
 import com.opensymphony.xwork2.ActionSupport;
+import java.util.Map;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.SessionMap;
+import org.apache.struts2.interceptor.SessionAware;
 
 /**
  *
  * @author Bryan Hdz
  */
-public class LoginAction extends ActionSupport {
+public class LoginAction extends ActionSupport implements SessionAware {
 
     private String client;
     private String correo;
     private String digesto;
+    private SessionMap<String, Object> sessionMap;
+
+    @Override
+    public void setSession(Map<String, Object> map) {
+        sessionMap = (SessionMap) map;
+    }
 
     public String execute() {
         String answer = ERROR;
@@ -38,6 +47,7 @@ public class LoginAction extends ActionSupport {
         } catch (Exception e) {
         }
         Singleton sing = Singleton.getInstance(dto);
+        sessionMap.put("dtoU", dto.getEntidad().getIdclient());
         return answer;
     }
 

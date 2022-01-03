@@ -117,7 +117,15 @@ public class OrdertableDAO {
                 lista.add(dto2);
             }
             t.commit();
-            return lista.get(0);
+            OrdertableDTO aux = null;
+            for(OrdertableDTO dto: lista){
+                System.out.println(dto.getEntidad().isIsdelivered());
+                if(!dto.getEntidad().isIsdelivered()){
+                    aux = dto;
+                }
+            }
+            System.out.println(aux);
+            return aux;
         } catch (Exception e) {
         }
         return null;

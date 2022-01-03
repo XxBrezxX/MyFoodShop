@@ -5,23 +5,38 @@
  */
 package com.ipn.mx.action;
 
+import antlr.debug.Event;
+import com.ipn.mx.modelo.dao.ClientDAO;
 import com.ipn.mx.modelo.dao.ClientaddressDAO;
+import com.ipn.mx.modelo.dao.DeliveryDAO;
 import com.ipn.mx.modelo.dao.OrderprodDAO;
 import com.ipn.mx.modelo.dao.OrdertableDAO;
 import com.ipn.mx.modelo.dao.ProductDAO;
 import com.ipn.mx.modelo.dto.ClientDTO;
 import com.ipn.mx.modelo.dto.ClientaddressDTO;
+import com.ipn.mx.modelo.dto.DeliveryDTO;
 import com.ipn.mx.modelo.dto.OrderprodDTO;
 import com.ipn.mx.modelo.dto.OrdertableDTO;
 import com.ipn.mx.modelo.dto.ProductDTO;
 import com.ipn.mx.modelo.entidades.Order_prod;
 import com.ipn.mx.modelo.entidades.Ordertable;
 import com.ipn.mx.modelo.entidades.Product;
+import com.ipn.mx.utilerias.EnviarMail;
 import com.ipn.mx.utilerias.Singleton;
+import java.util.Locale;
 import com.opensymphony.xwork2.ActionSupport;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.struts2.ServletActionContext;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
 
 /**
  *
@@ -35,6 +50,7 @@ public class SiteAction extends ActionSupport {
     private Product product;
     private Order_prod order_prod;
     private List<OrderprodDTO> carrito;
+    private HashMap reportParams = new HashMap();
 
     private final ProductDAO dao = new ProductDAO();
     private final OrderprodDAO opda = new OrderprodDAO();
@@ -87,6 +103,14 @@ public class SiteAction extends ActionSupport {
         this.order_prod = order_prod;
     }
 
+    public HashMap getReportParams() {
+        return reportParams;
+    }
+
+    public void setReportParams(HashMap reportParams) {
+        this.reportParams = reportParams;
+    }
+
     public String execute() {
         return SUCCESS;
     }
@@ -96,9 +120,13 @@ public class SiteAction extends ActionSupport {
     }
 
     public String Inicio() {
-        ClientDTO dto = new ClientDTO();
-        Singleton sing = Singleton.getInstance(dto);
-        System.out.println(sing.client);
+        HttpSession session = ServletActionContext.getRequest().getSession(false);
+        System.out.println(session.getAttribute("dtoU"));
+        ClientDTO aux = new ClientDTO();
+        ClientDAO aux1 = new ClientDAO();
+        int id = (int) session.getAttribute("dtoU");
+        aux.getEntidad().setIdclient(id);
+        this.dtoClient = aux1.read(aux);
         return SUCCESS;
     }
 
@@ -112,30 +140,32 @@ public class SiteAction extends ActionSupport {
     }
 
     public String Follow() {
-        this.carrito = new ArrayList<>();
         String estado = SUCCESS;
-        Singleton sing = Singleton.getInstance(dtoClient);
-        this.dtoClient = sing.client;
-        System.out.println(this.dtoClient);
+        this.carrito = new ArrayList<>();
+
+        HttpSession session = ServletActionContext.getRequest().getSession(false);
+        ClientDTO aux = new ClientDTO();
+        ClientDAO aux1 = new ClientDAO();
+        int id = (int) session.getAttribute("dtoU");
+        aux.getEntidad().setIdclient(id);
+        this.dtoClient = aux1.read(aux);
+
         ClientaddressDAO daoAdd = new ClientaddressDAO();
-        dtoClientAdd = daoAdd.giveAddresses(this.dtoClient);
-        
+        this.dtoClientAdd = daoAdd.giveAddresses(this.dtoClient);
+
         // Buscar la orden actual del usuario
-        try {
-            OrdertableDAO otda = new OrdertableDAO();
-            OrdertableDTO otdt = new OrdertableDTO();
-            
-            otdt = otda.giveAddresses(this.dtoClient);
-            
-            // Obtener listado de articulos en la orden
-            OrderprodDAO opda = new OrderprodDAO();
-            OrderprodDTO opdt = new OrderprodDTO();
-            
-            this.carrito = opda.getShopWheel(otdt);
-            
-        } catch (Exception e) {
-            estado = ERROR;
-        }
+        OrdertableDAO otda = new OrdertableDAO();
+        OrdertableDTO otdt = new OrdertableDTO();
+
+        otdt = otda.giveAddresses(this.dtoClient);
+
+        // Obtener listado de articulos en la orden
+        OrderprodDAO opda = new OrderprodDAO();
+
+        if(otdt != null)
+            this.carrito = opda.getShopWheel(otdt); 
+        else
+            this.carrito = new ArrayList<>();
 
         return estado;
     }
@@ -150,13 +180,18 @@ public class SiteAction extends ActionSupport {
 
     public String AgregarProducto() {
         OrdertableDAO daoOrderTable = new OrdertableDAO();
-        Singleton sing = Singleton.getInstance(dtoClient);
-        this.dtoClient = sing.client;
+        HttpSession session = ServletActionContext.getRequest().getSession(false);
+        System.out.println(session.getAttribute("dtoU"));
+        ClientDTO aux = new ClientDTO();
+        ClientDAO aux1 = new ClientDAO();
+        int id = (int) session.getAttribute("dtoU");
+        aux.getEntidad().setIdclient(id);
+        this.dtoClient = aux1.read(aux);
 
         OrdertableDTO dtoOrderTable = new OrdertableDTO();
         dtoOrderTable = daoOrderTable.giveAddresses(this.dtoClient);
         if (dtoOrderTable == null) { // No hay ninguna orden a este usuario
-            
+
             dtoOrderTable = new OrdertableDTO();
             ClientaddressDAO daoAdd = new ClientaddressDAO();
             this.dtoClientAdd = daoAdd.giveAddresses(this.dtoClient);
@@ -194,11 +229,11 @@ public class SiteAction extends ActionSupport {
         orderproddao.create(orderproddto);
         return SUCCESS;
     }
-    
-    public String EliminarProducto(){
-        
+
+    public String EliminarProducto() {
+
         String estado = ERROR;
-                
+
         OrderprodDTO dto = new OrderprodDTO();
         dto.setEntidad(this.order_prod);
         try {
@@ -206,6 +241,55 @@ public class SiteAction extends ActionSupport {
             estado = SUCCESS;
         } catch (Exception e) {
         }
+        return estado;
+    }
+
+    public String viewShortReport() {
+        HttpSession session = ServletActionContext.getRequest().getSession(false);
+        System.out.println(session.getAttribute("dtoU"));
+        ClientDTO aux = new ClientDTO();
+        ClientDAO aux1 = new ClientDAO();
+        int id = (int) session.getAttribute("dtoU");
+        aux.getEntidad().setIdclient(id);
+        this.dtoClient = aux1.read(aux);
+        System.out.println("com.ipn.mx.action.SiteAction.viewShortReport()" + this.dtoClient.getEntidad().getIdclient());
+        this.reportParams.put("vid", this.dtoClient.getEntidad().getIdclient());
+        return SUCCESS;
+    }
+
+    public String RealizarPedido() {
+        String estado = SUCCESS;
+        HttpSession session = ServletActionContext.getRequest().getSession(false);
+        System.out.println(session.getAttribute("dtoU"));
+        ClientDTO aux = new ClientDTO();
+        ClientDAO aux1 = new ClientDAO();
+        int id = (int) session.getAttribute("dtoU");
+        aux.getEntidad().setIdclient(id);
+        this.dtoClient = aux1.read(aux);
+
+        OrdertableDAO otda = new OrdertableDAO();
+        OrdertableDTO otdt = new OrdertableDTO();
+
+        otdt = otda.giveAddresses(this.dtoClient);
+
+        DeliveryDAO dda = new DeliveryDAO();
+        List<DeliveryDTO> resultados = dda.readAll();
+
+        Random r = new Random();
+        int indice = r.nextInt(resultados.size() - 0) + 0;
+
+        otdt.getEntidad().setFk_delivery(resultados.get(indice).getEntidad());
+        otdt.getEntidad().setIsdelivered(true);
+
+        otda.update(otdt);
+
+        EnviarMail em = new EnviarMail();
+        em.enviarCorreo(
+                this.dtoClient.getEntidad().getCorreo(),
+                "Lotus Team Sender",
+                "Los articulos se han enviado, en caso de existir un error comunicarse con soporte al cliente."
+        );
+
         return estado;
     }
 }
