@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="s" uri="/struts-tags" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -50,5 +51,78 @@
                 </div>
             </div>
         </nav>
+        <div class="card bg-dark m-3 justify-content-center">
+            <div class="card-header text-white">
+                Detalles de la orden
+            </div>
+            <div class="card-body mx-1">
+                <div class="row m-1">
+                    <div class="col-sm-3">
+                        <div class="my-2">
+                            <div class="card">
+                                <img src="https://image.flaticon.com/icons/png/512/107/107831.png" class="card-img-top p-2" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Carrito de Compras</h5>
+                                    <p class="card-text">
+                                        <b>Nombre Cliente: </b>
+                                        <s:property value="dtoClient.entidad.nombre"/> 
+                                        <s:property value="dtoClient.entidad.apellido"/> 
+                                        <s:property value="dtoClient.entidad.amaterno"/>
+                                    </p>
+                                    <p class="card-text">
+                                        <b>ID Cliente: </b>
+                                        <s:property value="dtoClient.entidad.idclient"/>
+                                    </p>
+                                    <p class="card-text">
+                                        <b>Dirección Cliente: </b>
+                                        <s:property value="dtoClientAdd.entidad.fk_address.calle"/>
+                                        #<s:property value="dtoClientAdd.entidad.fk_address.numero"/>
+                                        , <s:property value="dtoClientAdd.entidad.fk_address.cp"/>
+                                        , <s:property value="dtoClientAdd.entidad.fk_address.colonia"/>
+                                        . <s:property value="dtoClientAdd.entidad.fk_address.municipio"/>
+                                        , <s:property value="dtoClientAdd.entidad.fk_address.ciudad"/>
+                                    </p>
+                                    <a href="#" class="btn btn-primary">Vaciar Carrito</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-9 my-2">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nombre del Producto</th>
+                                    <th>Precio</th>
+                                    <th>Restaurant</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <s:iterator value="carrito" status="stat" var="env">
+                                    <tr>
+                                        <td><s:property value="%{#stat.index}"/></td>
+                                        <td><s:property value="entidad.fk_product.nombre"/></td>
+                                        <td><s:property value="entidad.fk_product.precio"/></td>
+                                        <td><s:property value="entidad.fk_product.fk_restaurant.razon_social"/></td>
+                                        <td>
+                                            <s:url action="eliminarProducto" var="dto">
+                                                <s:param name="order_prod.idorderprod" value="%{entidad.idorderprod}"/>
+                                            </s:url>
+                                            <s:a href="%{dto}" class="btn btn-outline-danger">
+                                                Eliminar
+                                            </s:a>
+                                        </td>
+                                    </tr>
+                                </s:iterator>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted justify-content-end d-flex">
+                <button type="button" class="btn btn-outline-light">Finalizar Pedido</button>
+            </div>
+        </div>
     </body>
 </html>

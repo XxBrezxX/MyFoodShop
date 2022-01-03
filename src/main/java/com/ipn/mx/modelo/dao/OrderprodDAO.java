@@ -5,6 +5,7 @@
  */
 package com.ipn.mx.modelo.dao;
 
+import com.ipn.mx.modelo.dto.ClientDTO;
 import com.ipn.mx.modelo.dto.OrderprodDTO;
 import com.ipn.mx.modelo.dto.OrdertableDTO;
 import com.ipn.mx.modelo.dto.ProductDTO;
@@ -83,6 +84,25 @@ public class OrderprodDAO {
             if (t != null && t.isActive()) {
                 t.rollback();
             }
+        }
+        return lista;
+    }
+    
+    public List<OrderprodDTO> getShopWheel(OrdertableDTO dtoClient){
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = s.getTransaction();
+        List<OrderprodDTO> lista = new ArrayList<>();
+        try {
+            t.begin();
+            Query q = s.createNativeQuery("SELECT * FROM Order_prod WHERE fk_order = :vidorder", Order_prod.class)
+                    .setParameter("vidorder", dtoClient.getEntidad().getIdorder());
+            for (Order_prod c : (List<Order_prod>) q.list()) {
+                OrderprodDTO dto2 = new OrderprodDTO();
+                dto2.setEntidad(c);
+                lista.add(dto2);
+            }
+            t.commit();
+        } catch (Exception e) {
         }
         return lista;
     }

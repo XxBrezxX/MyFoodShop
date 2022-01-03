@@ -8,13 +8,13 @@
             org.postgresql.Driver
         </property>
         <property name = "connection.url">
-            jdbc:postgresql://localhost:5432/MyFoodShop
+            jdbc:postgresql://ec2-35-173-83-57.compute-1.amazonaws.com:5432/d2dp2ua8vvnn0b
         </property>
         <property name = "connection.username">
-            postgres
+            ijhtvojqolvast
         </property>
         <property name = "connection.password">
-            Glorytown20
+            4f4462412f980abdbe53192eb9fd913cbee899cf6b0b1be40386ec3972e2da62
         </property>
         <property name = "dialect">
             org.hibernate.dialect.PostgreSQLDialect

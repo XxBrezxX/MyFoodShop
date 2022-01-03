@@ -8,6 +8,7 @@ package com.ipn.mx.modelo.dao;
 import com.ipn.mx.modelo.dto.AddressDTO;
 import com.ipn.mx.modelo.dto.ClientDTO;
 import com.ipn.mx.modelo.dto.ClientaddressDTO;
+import com.ipn.mx.modelo.entidades.Client;
 import com.ipn.mx.modelo.entidades.Client_address;
 import com.ipn.mx.utilerias.HibernateUtil;
 import java.util.ArrayList;
@@ -99,6 +100,26 @@ public class ClientaddressDAO {
             }
         }
         return dto;
+    }
+    
+    public ClientaddressDTO giveAddresses(ClientDTO dtoClient){
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = s.getTransaction();
+        List<ClientaddressDTO> lista = new ArrayList<>();
+        try {
+            t.begin();
+            Query q = s.createNativeQuery("SELECT * FROM Client_address WHERE fk_client = :vidclient", Client_address.class)
+                    .setParameter("vidclient", dtoClient.getEntidad().getIdclient());
+            for (Client_address c : (List<Client_address>) q.list()) {
+                ClientaddressDTO dto2 = new ClientaddressDTO();
+                dto2.setEntidad(c);
+                lista.add(dto2);
+            }
+            t.commit();
+            return lista.get(0);
+        } catch (Exception e) {
+        }
+        return null;
     }
     
     public static void main(String[] args) {

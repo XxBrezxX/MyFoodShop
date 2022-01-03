@@ -102,6 +102,27 @@ public class OrdertableDAO {
         return dto;
     }
     
+    
+    public OrdertableDTO giveAddresses(ClientDTO dtoClient){
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction t = s.getTransaction();
+        List<OrdertableDTO> lista = new ArrayList<>();
+        try {
+            t.begin();
+            Query q = s.createNativeQuery("SELECT * FROM Ordertable WHERE fk_user = :vidclient", Ordertable.class)
+                    .setParameter("vidclient", dtoClient.getEntidad().getIdclient());
+            for (Ordertable c : (List<Ordertable>) q.list()) {
+                OrdertableDTO dto2 = new OrdertableDTO();
+                dto2.setEntidad(c);
+                lista.add(dto2);
+            }
+            t.commit();
+            return lista.get(0);
+        } catch (Exception e) {
+        }
+        return null;
+    }
+    
     public static void main(String[] args) {
         OrdertableDAO dao = new OrdertableDAO();
         OrdertableDTO dto = new OrdertableDTO();
@@ -109,22 +130,9 @@ public class OrdertableDAO {
         ClientDAO cdao = new ClientDAO();
         ClientDTO cdto = new ClientDTO();
         
-        DeliveryDAO ddao = new DeliveryDAO();
-        DeliveryDTO ddto = new DeliveryDTO();
-        
-        AddressDAO adao = new AddressDAO();
-        AddressDTO adto = new AddressDTO();
-        
-        cdto.getEntidad().setIdclient(2);
-        ddto.getEntidad().setIddelivery(4);
-        adto.getEntidad().setIdaddress(2);
-        
-        dto.getEntidad().setFk_client(cdao.read(cdto).getEntidad());
-        dto.getEntidad().setFk_delivery(ddao.read(ddto).getEntidad());
-        dto.getEntidad().setFk_address(adao.read(adto).getEntidad());
-        dto.getEntidad().setIsdelivered(true);
-        
-        dao.create(dto);
-        System.out.println(dao.readAll());
+        cdto.getEntidad().setIdclient(3);
+        cdto = cdao.read(cdto);
+        System.out.println(dao.giveAddresses(cdto));
+        System.out.println(cdto);
     }
 }

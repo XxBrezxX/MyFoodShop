@@ -6,20 +6,27 @@
 <struts>
     <package name="default" namespace="/" extends="struts-default">
         
-        <!-- Conjunto de acciones para categoría -->
         <action name="verifyLogin" class="com.ipn.mx.action.LoginAction">
-            <result name="success">
-                /principal.jsp
+            <result name="success" type="redirectAction">
+                <param name="actionName">Start</param>
+                <param name="client">${client}</param>
             </result>
             <result name="error">
                 /index.jsp
             </result>
         </action>
+        <action name="Start" method="Start" class="com.ipn.mx.action.SiteAction">
+            <result name="success">
+                /principal.jsp
+            </result>
+        </action>
+        
         <action name="Inicio" method="Inicio" class="com.ipn.mx.action.SiteAction">
             <result name="success">
                 /principal.jsp
             </result>
         </action>
+        
         <action name="Productos" method="Productos" class="com.ipn.mx.action.SiteAction">
             <result name="success">
                 /productos/listarProductos.jsp
@@ -48,6 +55,11 @@
         <action name="AgregarProducto" method="AgregarProducto" class="com.ipn.mx.action.SiteAction">
             <result name="success" type="redirect">
                 Productos
+            </result>
+        </action>
+        <action name="eliminarProducto" method="EliminarProducto" class="com.ipn.mx.action.SiteAction">
+            <result name="success" type="redirect">
+                Follow
             </result>
         </action>
         

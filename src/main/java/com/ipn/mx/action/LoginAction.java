@@ -7,30 +7,37 @@ package com.ipn.mx.action;
 
 import com.ipn.mx.modelo.dao.ClientDAO;
 import com.ipn.mx.modelo.dto.ClientDTO;
+import com.ipn.mx.utilerias.Singleton;
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
 
 /**
  *
  * @author Bryan Hdz
  */
-public class LoginAction extends ActionSupport{
+public class LoginAction extends ActionSupport {
+
+    private String client;
     private String correo;
     private String digesto;
-    
-    public String execute(){
+
+    public String execute() {
         String answer = ERROR;
         ClientDAO dao = new ClientDAO();
         ClientDTO dto = new ClientDTO();
-        
+
         dto.getEntidad().setCorreo(correo);
         dto.getEntidad().setDigesto(digesto);
         System.out.println(dto);
-        
+
         try {
             dto = dao.verifyEmailPassword(dto);
-            if(dto != null) answer = SUCCESS;
+            if (dto != null) {
+                answer = SUCCESS;
+            }
         } catch (Exception e) {
         }
+        Singleton sing = Singleton.getInstance(dto);
         return answer;
     }
 
@@ -49,4 +56,13 @@ public class LoginAction extends ActionSupport{
     public void setDigesto(String digesto) {
         this.digesto = digesto;
     }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
+    }
+
 }

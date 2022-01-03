@@ -53,8 +53,8 @@
         </nav>
 
         <div class="container">
-            <div class="card text-black my-3">
-                <div class="card-header text-center">
+            <div class="card bg-dark my-3">
+                <div class="card-header text-white text-center">
                     <h1>Productos Disponibles</h1>
                 </div>
                 <div class="card-body table-responsive">
@@ -62,7 +62,7 @@
                     </h4>
                     <div class="mb-3 d-flex flex-wrap justify-content-center"/>
                     <s:iterator value="productos">
-                        <div class="card d-flex mx-2" style="width: 18rem;">
+                        <div class="card d-flex mx-2 my-1" style="width: 18rem;">
                             <img src="https://cdn4.iconfinder.com/data/icons/web-pack/64/reloading-512.png" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title"><s:property value="nombre"/></h5>
@@ -74,10 +74,10 @@
                                 <li class="list-group-item">Restaurant: <s:property value="fk_restaurant.razon_social"/></li>
                             </ul>
                             <div class="card-body">
-                                <s:url action="AgregarProducto" var="idProdTag">
+                                <s:url action="AgregarProducto" var="dto">
                                     <s:param name="product.idproducto" value="%{idproducto}"/>
                                 </s:url>
-                                <s:a href="%{idProdTag}" class="btn btn-outline-success">
+                                <s:a href="%{dto}" class="btn btn-outline-success">
                                     Añadir al carrito
                                 </s:a>
                             </div>
