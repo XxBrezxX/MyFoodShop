@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name = "connection.driver_class">
+            org.postgresql.Driver
+        </property>
+        <property name = "connection.url">
+            jdbc:postgresql://ec2-35-173-83-57.compute-1.amazonaws.com:5432/d2dp2ua8vvnn0b
+        </property>
+        <property name = "connection.username">
+            ijhtvojqolvast
+        </property>
+        <property name = "connection.password">
+            4f4462412f980abdbe53192eb9fd913cbee899cf6b0b1be40386ec3972e2da62
+        </property>
+        <property name = "dialect">
+            org.hibernate.dialect.PostgreSQLDialect
+        </property>
+        <property name = "show_sql">
+            true
+        </property>
+        <property name = "current_session_context_class">
+            thread
+        </property>
+        <property name = "hbm2ddl.auto">
+            update
+        </property>
+        
+        <property name = "connection.pool_size">
+            1
+        </property>
+        <property name = "hibernate.dbcp.initialSize">
+            5
+        </property>
+        <property name = "hibernate.dbcp.maxTotal">
+            20
+        </property>
+        <property name = "hibernate.dbcp.maxIdle">
+            10
+        </property>
+        <property name = "hibernate.dbcp.maxWaitMillis">
+            -1
+        </property>
+        <property name = "hibernate.enable_lazy_load_no_trans">
+            true
+        </property>
+        
+        <!--Aqui inicia la definicion de clases de tipo entidad-->
+        <mapping class="com.ipn.mx.modelo.entidades.Client"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Address"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Payment"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Restaurant"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Delivery"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Product"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Ordertable"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Sell"/>
+        
+        <mapping class="com.ipn.mx.modelo.entidades.Order_prod"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Client_address"/>
+        <mapping class="com.ipn.mx.modelo.entidades.Restaurant_address"/>
+        
+    </session-factory>
+</hibernate-configuration>
